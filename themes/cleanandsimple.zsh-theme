@@ -166,16 +166,16 @@ function build_right_prompt() {
                     rprompt+=$(enrich_append " ${omg_not_tracked_branch_symbol} " "${blue}")
                 else
                     rprompt+=$(enrich_append_unless ${will_rebase} " ${omg_merge_tracking_branch_symbol} " "${red}")
-                    rprompt+=$(enrich_append_if ${has_diverged} " ${omg_has_diverged_symbol} " "${yellow}")
 
                     if [[ true == ${has_diverged} ]]; then
+                        rprompt+=$(enrich_prepend " ${omg_has_diverged_symbol} -${commits_behind} +${commits_ahead} " "${yellow}")
+                    else
                         if [[ ${commits_behind} -gt 0 ]]; then
-                            rprompt+=$(enrich_prepend " ${omg_can_fast_forward_symbol} " "${blue}")
+                            rprompt+=$(enrich_prepend " ${omg_can_fast_forward_symbol} -${commits_behind}" "${blue}")
                         fi
-                    fi
-
-                    if [[ ${commits_ahead} -gt 0 && false == ${has_diverged} ]]; then
-                        rprompt+=$(enrich_prepend " ${omg_should_push_symbol} " "${blue}")
+                        if [[ ${commits_ahead} -gt 0 ]]; then
+                            rprompt+=$(enrich_prepend " ${omg_should_push_symbol} +${commits_ahead}" "${blue}")
+                        fi
                     fi
                 fi
             fi
